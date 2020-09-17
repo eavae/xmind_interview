@@ -1,0 +1,30 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Bill {
+  amount: Int!
+  category: Category!
+  categoryId: String!
+  id: Int!
+  time: Date!
+  type: BillType!
+}
+
+enum BillType {
+  INCOME
+  OUTCOME
+}
+
+type Category {
+  id: String!
+  name: String!
+  type: BillType!
+}
+
+"""Date scalar type"""
+scalar Date
+
+type Query {
+  getBills: [Bill!]!
+}
