@@ -1,7 +1,12 @@
 ## 开发日志
 
-2020-09-17 对需求进行分析，并进行脚手架搭建，+2 小时。
-2020-09-18 新增对账单的查询接口，并调整初始数据结构，+4 小时。
+2020-09-17 对需求进行分析，并进行脚手架搭建。+2 小时。
+
+2020-09-18 上午 新增对账单的查询接口，并调整初始数据结构。+4 小时。
+
+2020-09-18 下午 搭建前端基本框架。尝试使用Vite，因其HMR不支持apollo的基于Symbol的exports，详见[ISSUE-598](https://github.com/vitejs/vite/issues/598)，遂改为灵活度稍高的vue-cli。+2小时。
+
+
 
 ## 需求分析
 
@@ -28,7 +33,7 @@
 
 **服务端技术选型**
 
-- 数据库：简单起见，暂定将 csv 文件本身作为数据库使用，并采用[node-csvdb](https://github.com/ysnglt/node-csvdb)。采用原因：1. 其基于[fast-csv](https://github.com/C2FO/fast-csv)，性能较好，但其封装并没有以性能为主。2. 支持分页与 TypeScript。3. 其接口设计简洁，以便日后迁移至其它数据库。
+- 数据库：简单起见，暂定将 csv 文件本身作为数据库使用，并采用[node-csvdb](https://github.com/ysnglt/node-csvdb)。采用原因：1. 其基于[fast-csv](https://github.com/C2FO/fast-csv)，性能较好，但其封装并没有以性能为主。2. 支持TypeScript。3. 其接口设计简洁，以便日后迁移至其它数据库。
 - 框架：NestJS。采用原因：支持 TypeScript 和 GraphQL。
 
 **客户端技术选型**

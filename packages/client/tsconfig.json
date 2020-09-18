@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "isolatedModules": true,
+    "module": "esnext",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "target": "esnext",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "types": ["jest", "node"],
+    "strict": true,
+    "jsx": "preserve",
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules"]
+}
