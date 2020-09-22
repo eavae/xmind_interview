@@ -24,6 +24,13 @@ query {
 }
 `
 
+const TOTAL_INCOME_AND_OUTCOME_QUERY = `
+query {
+  totalIncome
+  totalOutcome
+}
+`
+
 describe('Bill Module (e2e)', () => {
   let app: INestApplication
 
@@ -60,5 +67,17 @@ describe('Bill Module (e2e)', () => {
       .expect(
         '{"data":{"getBillsByDate":[{"id":17},{"id":18},{"id":19},{"id":20},{"id":21}]}}\n',
       )
+  })
+
+  it('TOTAL_INCOME_AND_OUTCOME_QUERY', () => {
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        query: TOTAL_INCOME_AND_OUTCOME_QUERY,
+        variables: {},
+      })
+      .expect(200)
+      .expect('{"data":{"totalIncome":134000,"totalOutcome":104800}}\n')
   })
 })

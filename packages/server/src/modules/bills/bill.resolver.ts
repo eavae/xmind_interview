@@ -1,4 +1,11 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  Int,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
 
 import {
   Bill,
@@ -32,12 +39,22 @@ export class BillResolver {
   }
 
   @ResolveField('category', () => Category)
-  async getPosts(@Parent() bill: Bill) {
+  async category(@Parent() bill: Bill) {
     const { categoryId } = bill
     return {
       id: categoryId,
       type: BillType.INCOME,
       name: '工资',
     }
+  }
+
+  @Query(() => Int)
+  async totalIncome() {
+    return this.billsService.getTotalIncome()
+  }
+
+  @Query(() => Int)
+  async totalOutcome() {
+    return this.billsService.getTotalOutcome()
   }
 }

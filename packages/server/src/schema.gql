@@ -8,6 +8,7 @@ type Bill {
   categoryId: String!
   id: Int!
   time: Date!
+  type: BillType!
 }
 
 enum BillType {
@@ -33,4 +34,6 @@ type PagedBill {
 type Query {
   getBills(categoryId: String, limit: Int = 20, offset: Int = 0): PagedBill!
   getBillsByDate(categoryId: String, month: Int!, year: Int!): [Bill!]!
+  totalIncome: Int!
+  totalOutcome: Int!
 }

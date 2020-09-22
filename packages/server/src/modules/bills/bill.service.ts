@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import csvdb from 'csv-database'
-import { filter, last, slice } from 'ramda'
+import { add, filter, last, slice } from 'ramda'
 
 import { CSVDBType } from '../../global.type'
+import { BillType } from '../categories/category.entity'
 
 import { Bill } from './bill.entity'
 
@@ -77,5 +78,21 @@ export class BillService {
         currentPageItems.length !== 0 &&
         last(bills).id !== last(currentPageItems).id,
     }
+  }
+
+  async getTotalIncome() {
+    const bills = this.convertTypes((await this.db.get()) as any)
+    return bills
+      .filter((x) => x.type === BillType.INCOME)
+      .map((x) => x.amount)
+      .reduce(add, 0)
+  }
+
+  async getTotalOutcome() {
+    const bills = this.convertTypes((await this.db.get()) as any)
+    return bills
+      .filter((x) => x.type === BillType.OUTCOME)
+      .map((x) => x.amount)
+      .reduce(add, 0)
   }
 }
