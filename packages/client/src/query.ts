@@ -17,3 +17,13 @@ export const QUERY_TOTAL_INCOME_AND_OUTCOME = gql`
     totalOutcome
   }
 `
+
+export const QUERY_ALL_CATEGORIES = gql`
+  query {
+    categories {
+      id
+      type
+      name
+    }
+  }
+`

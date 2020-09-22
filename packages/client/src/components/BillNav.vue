@@ -11,8 +11,19 @@
     <div class="category">
       <select v-model="category" name="category">
         <option value="">所有类别</option>
-        <option value="2asdf">投资</option>
-        <option value="56asd">水果</option>
+        <optgroup
+          v-for="type in BillType"
+          :key="type"
+          :label="BILL_TYPE_TO_NAME[type]"
+        >
+          <option
+            v-for="item in filteredCategory(type)"
+            :key="item.id"
+            :value="item.id"
+          >
+            {{ item.name }}
+          </option>
+        </optgroup>
       </select>
     </div>
     <div class="date">
@@ -27,14 +38,22 @@
 
 <script>
 import { useQuery } from '@vue/apollo-composable'
-import Currency from './Currency'
-import { BillType, MONTH_TO_NAME } from '../enums'
+
 import { QUERY_TOTAL_INCOME_AND_OUTCOME } from '@/query'
+import { Category } from '../models'
+import Currency from './Currency.vue'
+import { BillType, MONTH_TO_NAME, BILL_TYPE_TO_NAME } from '../enums'
 
 export default {
   name: 'BillNav',
   components: {
     Currency,
+  },
+  props: {
+    categories: {
+      type: Array,
+      default: () => [],
+    },
   },
   setup() {
     const { result } = useQuery(QUERY_TOTAL_INCOME_AND_OUTCOME)
@@ -51,6 +70,12 @@ export default {
   created() {
     this.MONTH_TO_NAME = MONTH_TO_NAME
     this.BillType = BillType
+    this.BILL_TYPE_TO_NAME = BILL_TYPE_TO_NAME
+  },
+  methods: {
+    filteredCategory(type) {
+      return this.categories.filter((x) => x.type === type)
+    },
   },
 }
 </script>
