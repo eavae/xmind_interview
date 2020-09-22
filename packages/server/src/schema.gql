@@ -32,6 +32,7 @@ type PagedBill {
 }
 
 type Query {
+  categories: [Category!]!
   getBills(categoryId: String, limit: Int = 20, offset: Int = 0): PagedBill!
   getBillsByDate(categoryId: String, month: Int!, year: Int!): [Bill!]!
   totalIncome: Int!

@@ -5,6 +5,7 @@ import { join } from 'path'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { BillModule } from './modules/bills/bill.module'
+import { CategoryModule } from './modules/categories/category.module'
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { BillModule } from './modules/bills/bill.module'
       sortSchema: true,
     }),
     BillModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
