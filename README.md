@@ -6,6 +6,8 @@
 
 2020-09-18 下午 搭建前端基本框架。尝试使用Vite，因其HMR不支持apollo的基于Symbol的exports，详见[ISSUE-598](https://github.com/vitejs/vite/issues/598)，遂改为灵活度稍高的vue-cli。+2小时。
 
+2020-09-22 下午 新增操作栏，支持显示总收入支出，显示分类筛选和日期筛选。+4小时，其中1小时踩了Vue3 devtool的坑。
+
 
 
 ## 需求分析
