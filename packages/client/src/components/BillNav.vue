@@ -1,11 +1,11 @@
 <template>
   <nav>
     <div class="stats">
-      <div class="income">
-        <Currency :value="100" :bill-type="BillType.INCOME" />
+      <div v-if="data" class="income">
+        <Currency :value="data.totalIncome" :bill-type="BillType.INCOME" />
       </div>
-      <div class="outcome">
-        <Currency :value="100" :bill-type="BillType.OUTCOME" />
+      <div v-if="data" class="outcome">
+        <Currency :value="data.totalOutcome" :bill-type="BillType.OUTCOME" />
       </div>
     </div>
     <div class="category">
@@ -26,13 +26,21 @@
 </template>
 
 <script>
+import { useQuery } from '@vue/apollo-composable'
 import Currency from './Currency'
 import { BillType, MONTH_TO_NAME } from '../enums'
+import { QUERY_TOTAL_INCOME_AND_OUTCOME } from '@/query'
 
 export default {
   name: 'BillNav',
   components: {
     Currency,
+  },
+  setup() {
+    const { result } = useQuery(QUERY_TOTAL_INCOME_AND_OUTCOME)
+    return {
+      data: result,
+    }
   },
   data() {
     return {

@@ -16,12 +16,12 @@ export default {
   name: 'Currency',
   props: {
     billType: {
-      type: Object,
+      type: String,
       default: undefined,
     },
     currencyType: {
       default: CurrencyType.RMB,
-      type: Object,
+      type: String,
     },
     value: {
       default: undefined,
