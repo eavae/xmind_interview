@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve src/main.ts",
-    "build": "vue-cli-service build src/main.ts",
+    "start": "cross-env NODE_ENV=development vue-cli-service serve src/main.ts",
+    "build": "cross-env NODE_ENV=production vue-cli-service build src/main.ts",
     "lint": "vue-cli-service lint",
     "postinstall": "node scripts/vue-apollo-patch.js"
   },
@@ -15,6 +15,7 @@
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-link-http": "^1.5.17",
     "core-js": "^3.6.5",
+    "cross-env": "^7.0.2",
     "graphql": "^15.3.0",
     "normalize.css": "^8.0.1",
     "vue": "^3.0.0-rc.13",

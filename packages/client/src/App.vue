@@ -2,6 +2,7 @@
   <header><h1>balance</h1></header>
   <section class="app">
     <BillInput />
+    <BillNav />
   </section>
   <footer class="info">
     <p>Created by 李宇</p>
@@ -18,6 +19,7 @@ import { provide } from 'vue'
 
 import { QUERY_ALL_BILLS } from './query'
 import BillInput from './components/BillInput.vue'
+import BillNav from './components/BillNav.vue'
 
 const cache = new InMemoryCache()
 const client = new ApolloClient({
@@ -31,6 +33,7 @@ export default {
   name: 'App',
   components: {
     BillInput,
+    BillNav,
   },
   setup() {
     provide(DefaultApolloClient, client)
@@ -65,7 +68,7 @@ header > h1 {
 
 section.app {
   background: #fff;
-  margin: 130px 0 40px 0;
+  margin: 70px 0 40px 0;
   position: relative;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
 }

@@ -6,15 +6,19 @@
       </option>
     </select>
     <input type="number" class="new RMB" placeholder="金额" />
-    <div class="currency">¥</div>
+    <Currency />
   </form>
 </template>
 
 <script>
-import { BILL_TYPES, BILL_TYPE_TO_NAME, BillType } from '../enums'
+import Currency from './Currency'
+import { BILL_TYPES, BILL_TYPE_TO_NAME, BillType, CurrencyType } from '../enums'
 
 export default {
   name: 'BillInput',
+  components: {
+    Currency,
+  },
   data() {
     return {
       type: BillType.OUTCOME,
@@ -23,6 +27,7 @@ export default {
   created() {
     this.BILL_TYPES = BILL_TYPES
     this.BILL_TYPE_TO_NAME = BILL_TYPE_TO_NAME
+    this.CurrencyType = CurrencyType
   },
 }
 </script>
@@ -35,6 +40,7 @@ form.main {
   line-height: 1em;
 
   -webkit-font-smoothing: antialiased;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 select.type {
@@ -47,7 +53,6 @@ input.new {
   padding: 16px;
   border: none;
   background: rgba(0, 0, 0, 0.003);
-  box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
 }
 
 .currency {
