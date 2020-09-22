@@ -26,7 +26,7 @@
 
 ## 数据结构调整
 
-- bill 中的 type 与 category 中的 type 重复，随删除 bill 中的 type
+- bill 将category重命名为categoryId
 - 在 bill 中增加自增 id 字段，以便在新增或删除等场景下操作该表
 
 ## 技术选型

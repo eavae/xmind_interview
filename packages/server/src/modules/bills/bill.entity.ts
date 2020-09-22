@@ -2,12 +2,15 @@ import { ArgsType, Field, Int, ObjectType } from '@nestjs/graphql'
 import { MaxLength, MinLength } from 'class-validator'
 
 import { Paginated, PaginationArgs } from '../../models'
-import { Category } from '../categories/category.entity'
+import { BillType, Category } from '../categories/category.entity'
 
 @ObjectType()
 export class Bill {
   @Field(() => Int)
   id: number
+
+  @Field(() => BillType)
+  type: BillType
 
   @Field(() => Date)
   time: Date

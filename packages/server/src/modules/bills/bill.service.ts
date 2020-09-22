@@ -12,7 +12,7 @@ export function configureBillService(filepath: string) {
     useFactory: async () => {
       const db = await csvdb(
         filepath,
-        ['id', 'time', 'categoryId', 'amount'],
+        ['id', 'type', 'time', 'categoryId', 'amount'],
         ',',
       )
       return new BillService(db)
