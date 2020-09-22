@@ -1,7 +1,12 @@
 <template>
-  <header><h1>balence</h1></header>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3.0 + Vite" />
+  <header><h1>balance</h1></header>
+  <section class="app">
+    <BillInput />
+  </section>
+  <footer class="info">
+    <p>Created by 李宇</p>
+    <p>Design from TodoMVC</p>
+  </footer>
 </template>
 
 <script lang="ts">
@@ -12,8 +17,7 @@ import { DefaultApolloClient, useQuery } from '@vue/apollo-composable'
 import { provide } from 'vue'
 
 import { QUERY_ALL_BILLS } from './query'
-
-import HelloWorld from './components/HelloWorld.vue'
+import BillInput from './components/BillInput.vue'
 
 const cache = new InMemoryCache()
 const client = new ApolloClient({
@@ -26,7 +30,7 @@ const client = new ApolloClient({
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    BillInput,
   },
   setup() {
     provide(DefaultApolloClient, client)
@@ -47,8 +51,7 @@ body {
   min-width: 230px;
   max-width: 550px;
   margin: 0 auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-smoothing: antialiased;
   font-weight: 300;
 }
 
@@ -57,8 +60,35 @@ header > h1 {
   font-weight: 100;
   text-align: center;
   color: rgba(175, 47, 47, 0.15);
-  -webkit-text-rendering: optimizeLegibility;
-  -moz-text-rendering: optimizeLegibility;
   text-rendering: optimizeLegibility;
+}
+
+section.app {
+  background: #fff;
+  margin: 130px 0 40px 0;
+  position: relative;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+
+footer.info {
+  margin: 65px auto 0;
+  color: #bfbfbf;
+  font-size: 10px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+input,
+select {
+  font-weight: 300;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+}
+
+select {
+  border: none;
 }
 </style>
