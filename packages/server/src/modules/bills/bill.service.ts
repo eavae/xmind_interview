@@ -63,7 +63,9 @@ export class BillService {
   }
 
   async getAll(offset: number, limit: number, categoryId?: string) {
-    let bills = this.convertTypes((await this.db.get()) as any)
+    let bills = this.convertTypes((await this.db.get()) as any).sort(
+      (a, b) => b.time.getTime() - a.time.getTime(),
+    )
 
     if (categoryId) {
       bills = filter((bill) => bill.categoryId === categoryId, bills)

@@ -51,7 +51,7 @@ describe('Bill Module (e2e)', () => {
       })
       .expect(200)
       .expect(
-        '{"data":{"getBills":{"hasNextPage":true,"totalCount":6,"nodes":[{"id":5}]}}}\n',
+        '{"data":{"getBills":{"hasNextPage":true,"totalCount":6,"nodes":[{"id":17}]}}}\n',
       )
   })
 
