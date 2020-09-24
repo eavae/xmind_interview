@@ -16,18 +16,20 @@ export const TOTAL_INCOME_AND_OUTCOME_FRAGMENT = gql`
 `
 
 export const QUERY_ALL_BILLS = gql`
-  query {
-    getBills {
+  query getBills($categoryId: String, $limit: Int = 20, $offset: Int = 0) {
+    getBills(categoryId: $categoryId, limit: $limit, offset: $offset) {
       totalCount
+      hasNextPage
       nodes {
         id
+        category {
+          name
+        }
+        type
+        amount
+        time
       }
     }
-  }
-`
-
-export const QUERY_ALL = gql`
-  query {
     categories {
       ...AllCategoryFields
     }

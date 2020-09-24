@@ -8,6 +8,13 @@
       :total-income="data.totalIncome"
       :total-outcome="data.totalOutcome"
     />
+    <Bills
+      v-if="data && data.getBills.nodes.length > 0"
+      :bills="data.getBills.nodes"
+      :total-count="data.getBills.totalCount"
+      :has-more="data.getBills.hasNextPage"
+      @load-more="loadMore"
+    />
   </section>
   <footer class="info">
     <p>Created by 李宇</p>
@@ -22,10 +29,11 @@ import { HttpLink } from 'apollo-link-http'
 import { DefaultApolloClient, useQuery } from '@vue/apollo-composable'
 import { provide } from 'vue'
 
-import { QUERY_ALL } from './query'
+import { QUERY_ALL_BILLS } from './query'
 import BillInput from './components/BillInput.vue'
 import BillNav from './components/BillNav.vue'
-import { Category } from './models'
+import Bills from './components/Bills.vue'
+import { Bill, Category, Paged } from './models'
 
 const cache = new InMemoryCache()
 const client = new ApolloClient({
@@ -35,19 +43,68 @@ const client = new ApolloClient({
   }),
 })
 
+interface QueryAllBillsResponse {
+  getBills: Paged<Bill>
+  categories: Category[]
+  totalIncome: number
+  totalOutcome: number
+}
+
+interface QueryAllBillsVariable {
+  categoryId?: string
+  limit?: number
+  offset?: number
+}
+
 export default {
   name: 'App',
   components: {
     BillInput,
     BillNav,
+    Bills,
   },
   setup() {
     provide(DefaultApolloClient, client)
 
-    const { result } = useQuery<{ categories: Category[] }>(QUERY_ALL)
+    const { result, fetchMore } = useQuery<
+      QueryAllBillsResponse,
+      QueryAllBillsVariable
+    >(
+      QUERY_ALL_BILLS,
+      () => ({
+        offset: 0,
+        limit: 20,
+      }),
+      {},
+    )
+
+    function loadMore() {
+      fetchMore({
+        variables: {
+          offset: result.value.getBills.nodes.length,
+        },
+        updateQuery(previous, { fetchMoreResult }) {
+          if (!fetchMoreResult || !previous.getBills.hasNextPage) {
+            return previous
+          }
+
+          return {
+            ...fetchMoreResult,
+            getBills: {
+              ...fetchMoreResult.getBills,
+              nodes: [
+                ...previous.getBills.nodes,
+                ...fetchMoreResult.getBills.nodes,
+              ],
+            },
+          }
+        },
+      })
+    }
 
     return {
       data: result,
+      loadMore,
     }
   },
 }

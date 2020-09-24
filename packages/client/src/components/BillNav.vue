@@ -92,7 +92,10 @@ nav {
 .stats {
   flex: 2;
   display: flex;
-  justify-content: space-evenly;
+}
+
+.stats > div {
+  margin-right: 20px;
 }
 
 .category {
