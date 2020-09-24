@@ -14,11 +14,15 @@ import {
   PagedBill,
 } from '../../modules/bills/bill.entity'
 import { BillService } from '../../modules/bills/bill.service'
-import { BillType, Category } from '../categories/category.entity'
+import { Category } from '../categories/category.entity'
+import { CategoryService } from '../categories/category.service'
 
 @Resolver(() => Bill)
 export class BillResolver {
-  constructor(private billsService: BillService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private billsService: BillService,
+  ) {}
 
   @Query(() => [Bill])
   async getBillsByDate(
@@ -41,11 +45,7 @@ export class BillResolver {
   @ResolveField('category', () => Category)
   async category(@Parent() bill: Bill) {
     const { categoryId } = bill
-    return {
-      id: categoryId,
-      type: BillType.INCOME,
-      name: '工资',
-    }
+    return this.categoryService.getById(categoryId)
   }
 
   @Query(() => Int)

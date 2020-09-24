@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 
 import { CATEGORIES_CSV_FILE_PATH } from '../../constants'
 
-import { configureCategoryService } from './category.service'
+import { CategoryService, configureCategoryService } from './category.service'
 import { CategoryResolver } from './category.resolver'
 
 @Module({
@@ -10,6 +10,6 @@ import { CategoryResolver } from './category.resolver'
     configureCategoryService(CATEGORIES_CSV_FILE_PATH),
     CategoryResolver,
   ],
-  exports: [],
+  exports: [CategoryService],
 })
 export class CategoryModule {}

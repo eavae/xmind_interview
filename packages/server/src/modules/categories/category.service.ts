@@ -38,4 +38,17 @@ export class CategoryService {
   async getAll() {
     return this.convertTypes((await this.db.get()) as any)
   }
+
+  async getById(id: string) {
+    const categories = this.convertTypes(
+      (await this.db.get({
+        id,
+      })) as any,
+    )
+
+    if (categories.length > 0) {
+      return categories[0]
+    }
+    return undefined
+  }
 }
