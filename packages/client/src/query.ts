@@ -1,5 +1,20 @@
 import gql from 'graphql-tag'
 
+export const CATEGORIES_FRAGMENT = gql`
+  fragment AllCategoryFields on Category {
+    id
+    type
+    name
+  }
+`
+
+export const TOTAL_INCOME_AND_OUTCOME_FRAGMENT = gql`
+  fragment TotalIncomeAndOutCome on Query {
+    totalIncome
+    totalOutcome
+  }
+`
+
 export const QUERY_ALL_BILLS = gql`
   query {
     getBills {
@@ -11,19 +26,13 @@ export const QUERY_ALL_BILLS = gql`
   }
 `
 
-export const QUERY_TOTAL_INCOME_AND_OUTCOME = gql`
-  query {
-    totalIncome
-    totalOutcome
-  }
-`
-
-export const QUERY_ALL_CATEGORIES = gql`
+export const QUERY_ALL = gql`
   query {
     categories {
-      id
-      type
-      name
+      ...AllCategoryFields
     }
+    ...TotalIncomeAndOutCome
   }
+  ${CATEGORIES_FRAGMENT}
+  ${TOTAL_INCOME_AND_OUTCOME_FRAGMENT}
 `

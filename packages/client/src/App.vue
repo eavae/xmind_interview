@@ -2,7 +2,12 @@
   <header><h1>balance</h1></header>
   <section class="app">
     <BillInput />
-    <BillNav v-if="data" :categories="data.categories" />
+    <BillNav
+      v-if="data"
+      :categories="data.categories"
+      :total-income="data.totalIncome"
+      :total-outcome="data.totalOutcome"
+    />
   </section>
   <footer class="info">
     <p>Created by 李宇</p>
@@ -17,7 +22,7 @@ import { HttpLink } from 'apollo-link-http'
 import { DefaultApolloClient, useQuery } from '@vue/apollo-composable'
 import { provide } from 'vue'
 
-import { QUERY_ALL_CATEGORIES } from './query'
+import { QUERY_ALL } from './query'
 import BillInput from './components/BillInput.vue'
 import BillNav from './components/BillNav.vue'
 import { Category } from './models'
@@ -39,9 +44,7 @@ export default {
   setup() {
     provide(DefaultApolloClient, client)
 
-    const { result } = useQuery<{ categories: Category[] }>(
-      QUERY_ALL_CATEGORIES,
-    )
+    const { result } = useQuery<{ categories: Category[] }>(QUERY_ALL)
 
     return {
       data: result,
