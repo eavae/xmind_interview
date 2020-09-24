@@ -15,10 +15,10 @@ export class Bill {
   @Field(() => Date)
   time: Date
 
-  @Field()
-  categoryId: string
+  @Field({ nullable: true })
+  categoryId?: string
 
-  @Field(() => Category)
+  @Field(() => Category, { nullable: true })
   category?: Category
 
   @Field(() => Int)

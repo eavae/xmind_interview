@@ -1,6 +1,7 @@
 import {
   Args,
   Int,
+  Mutation,
   Parent,
   Query,
   ResolveField,
@@ -14,7 +15,7 @@ import {
   PagedBill,
 } from '../../modules/bills/bill.entity'
 import { BillService } from '../../modules/bills/bill.service'
-import { Category } from '../categories/category.entity'
+import { BillType, Category } from '../categories/category.entity'
 import { CategoryService } from '../categories/category.service'
 
 @Resolver(() => Bill)
@@ -56,5 +57,21 @@ export class BillResolver {
   @Query(() => Int)
   async totalOutcome() {
     return this.billsService.getTotalOutcome()
+  }
+
+  @Mutation(() => Bill)
+  async createBill(
+    @Args({
+      name: 'type',
+      type: () => BillType,
+    })
+    billType: BillType,
+    @Args({
+      name: 'amount',
+      type: () => Int,
+    })
+    amount: number,
+  ) {
+    return this.billsService.createBill(billType, amount)
   }
 }

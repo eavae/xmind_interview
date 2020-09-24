@@ -1,7 +1,7 @@
 <template>
   <header><h1>balance</h1></header>
   <section class="app">
-    <BillInput />
+    <BillInput @submit="createBill" />
     <BillNav
       v-if="data"
       :categories="data.categories"
@@ -23,17 +23,22 @@
 </template>
 
 <script lang="ts">
-import { ApolloClient } from 'apollo-boost'
+import { ApolloClient, MutationUpdaterFn } from 'apollo-boost'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
-import { DefaultApolloClient, useQuery } from '@vue/apollo-composable'
+import {
+  DefaultApolloClient,
+  useMutation,
+  useQuery,
+} from '@vue/apollo-composable'
 import { provide } from 'vue'
 
-import { QUERY_ALL_BILLS } from './query'
+import { CREATE_BILL, QUERY_ALL_BILLS } from './query'
 import BillInput from './components/BillInput.vue'
 import BillNav from './components/BillNav.vue'
 import Bills from './components/Bills.vue'
 import { Bill, Category, Paged } from './models'
+import { BillType } from './enums'
 
 const cache = new InMemoryCache()
 const client = new ApolloClient({
@@ -56,6 +61,32 @@ interface QueryAllBillsVariable {
   offset?: number
 }
 
+interface MutationBillResponse {
+  createBill: Bill
+}
+
+const createBillCacheUpdater: MutationUpdaterFn<MutationBillResponse> = (
+  cache,
+  { data },
+) => {
+  const cacheData = cache.readQuery<QueryAllBillsResponse>({
+    query: QUERY_ALL_BILLS,
+  })
+  if (cacheData && data) {
+    cacheData.getBills.nodes.unshift(data.createBill)
+    cacheData.getBills.totalCount += 1
+    if (data.createBill.type === BillType.INCOME) {
+      cacheData.totalIncome += data.createBill.amount
+    } else {
+      cacheData.totalOutcome += data.createBill.amount
+    }
+    cache.writeQuery({
+      query: QUERY_ALL_BILLS,
+      data: cacheData,
+    })
+  }
+}
+
 export default {
   name: 'App',
   components: {
@@ -76,6 +107,13 @@ export default {
         limit: 20,
       }),
       {},
+    )
+
+    const { mutate: createBill } = useMutation<{ createBill: Bill }>(
+      CREATE_BILL,
+      {
+        update: createBillCacheUpdater,
+      },
     )
 
     function loadMore() {
@@ -105,7 +143,11 @@ export default {
     return {
       data: result,
       loadMore,
+      createBill,
     }
+  },
+  methods: {
+    log: console.log,
   },
 }
 </script>

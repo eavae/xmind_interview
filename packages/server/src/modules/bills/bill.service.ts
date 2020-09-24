@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import csvdb from 'csv-database'
-import { add, filter, last, slice } from 'ramda'
+import { add, filter, last, max, reduce, slice } from 'ramda'
 
 import { CSVDBType } from '../../global.type'
 import { BillType } from '../categories/category.entity'
@@ -16,7 +16,16 @@ export function configureBillService(filepath: string) {
         ['id', 'type', 'time', 'categoryId', 'amount'],
         ',',
       )
-      return new BillService(db)
+      const all = await db.get()
+      const maxIndex = reduce<number[], number>(
+        max,
+        0,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        all.map((x) => +x.id) as number[],
+      )
+
+      return new BillService(db, maxIndex + 1)
     },
   }
 }
@@ -26,21 +35,45 @@ export class BillService {
   index = 0
   db: CSVDBType
 
-  constructor(db: CSVDBType) {
+  constructor(db: CSVDBType, index: number) {
     this.db = db
+    this.index = index
+  }
+
+  convertType({
+    amount,
+    time,
+    id,
+    type,
+    categoryId,
+  }: Record<string, unknown>): Bill {
+    return {
+      id: +id,
+      type: +type,
+      categoryId,
+      amount: +amount,
+      time: new Date(+time),
+    } as Bill
   }
 
   convertTypes(items: Record<string, unknown>[]): Bill[] {
-    return items.map(
-      ({ amount, time, id, type, categoryId }) =>
-        ({
-          id: +id,
-          type: +type,
-          categoryId,
-          amount: +amount,
-          time: new Date(+time),
-        } as Bill),
-    )
+    return items.map(this.convertType)
+  }
+
+  async createBill(type: BillType, amount: number) {
+    const bill = await this.db.add({
+      id: this.index++,
+      type,
+      amount,
+      time: +new Date(),
+    })
+    return this.convertType(bill[0] as any)
+  }
+
+  async deleteById(id: number) {
+    await this.db.delete({
+      id,
+    })
   }
 
   async getBillsByDate(year: number, month: number, categoryId?: string) {

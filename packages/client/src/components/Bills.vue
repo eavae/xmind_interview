@@ -3,7 +3,9 @@
     <ol class="wrapper">
       <li v-for="bill in bills" :key="bill.id" class="item">
         <Currency class="stats" :value="bill.amount" :bill-type="bill.type" />
-        <div class="category">{{ bill.category.name }}</div>
+        <div class="category">
+          {{ bill.category ? bill.category.name : '' }}
+        </div>
         <div class="date">{{ formatDate(bill.time) }}</div>
       </li>
     </ol>

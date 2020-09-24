@@ -22,12 +22,12 @@ export const QUERY_ALL_BILLS = gql`
       hasNextPage
       nodes {
         id
-        category {
-          name
-        }
         type
         amount
         time
+        category {
+          name
+        }
       }
     }
     categories {
@@ -37,4 +37,18 @@ export const QUERY_ALL_BILLS = gql`
   }
   ${CATEGORIES_FRAGMENT}
   ${TOTAL_INCOME_AND_OUTCOME_FRAGMENT}
+`
+
+export const CREATE_BILL = gql`
+  mutation createBill($type: BillType!, $amount: Int!) {
+    createBill(type: $type, amount: $amount) {
+      id
+      type
+      amount
+      time
+      category {
+        name
+      }
+    }
+  }
 `

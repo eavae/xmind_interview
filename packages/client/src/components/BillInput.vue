@@ -1,11 +1,17 @@
 <template>
-  <form class="main">
+  <form class="main" @submit.prevent="validate">
     <select v-model="type" class="type">
       <option v-for="billType in BILL_TYPES" :key="billType" :value="billType">
         {{ BILL_TYPE_TO_NAME[billType] }}
       </option>
     </select>
-    <input type="number" class="new RMB" placeholder="金额" />
+    <input
+      v-model="amount"
+      type="number"
+      class="new RMB"
+      placeholder="金额"
+      step="0.01"
+    />
     <Currency />
   </form>
 </template>
@@ -19,15 +25,30 @@ export default {
   components: {
     Currency,
   },
+  emits: ['submit'],
   data() {
     return {
       type: BillType.OUTCOME,
+      amount: '',
     }
   },
   created() {
     this.BILL_TYPES = BILL_TYPES
     this.BILL_TYPE_TO_NAME = BILL_TYPE_TO_NAME
     this.CurrencyType = CurrencyType
+  },
+  methods: {
+    validate(e) {
+      const amount = Number.parseInt(this.amount * 100, 10)
+      if (amount && this.type) {
+        this.$emit('submit', {
+          type: this.type,
+          amount,
+        })
+        this.amount = ''
+        return true
+      }
+    },
   },
 }
 </script>
