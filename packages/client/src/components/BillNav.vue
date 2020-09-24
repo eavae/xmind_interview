@@ -62,11 +62,20 @@ export default {
       default: () => 0,
     },
   },
+  emits: ['update'],
   data() {
     return {
       date: '',
       category: '',
     }
+  },
+  watch: {
+    category(newValue) {
+      this.$emit('update', {
+        categoryId: newValue,
+        date: this.date,
+      })
+    },
   },
   created() {
     this.MONTH_TO_NAME = MONTH_TO_NAME

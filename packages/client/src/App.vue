@@ -7,6 +7,7 @@
       :categories="data.categories"
       :total-income="data.totalIncome"
       :total-outcome="data.totalOutcome"
+      @update="queryChanged"
     />
     <Bills
       v-if="data && data.getBills.nodes.length > 0"
@@ -97,7 +98,7 @@ export default {
   setup() {
     provide(DefaultApolloClient, client)
 
-    const { result, fetchMore } = useQuery<
+    const { result, fetchMore, refetch } = useQuery<
       QueryAllBillsResponse,
       QueryAllBillsVariable
     >(
@@ -144,10 +145,17 @@ export default {
       data: result,
       loadMore,
       createBill,
+      refetch,
     }
   },
   methods: {
-    log: console.log,
+    queryChanged({ categoryId }: { categoryId?: string }) {
+      // @ts-ignore
+      this.refetch({
+        categoryId,
+        offset: 0,
+      })
+    },
   },
 }
 </script>
