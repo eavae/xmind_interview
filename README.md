@@ -1,5 +1,3 @@
-
-
 # 需求分析
 
 - 目标用户：对数据安全敏感的离线用户。
@@ -9,10 +7,14 @@
 
 # 如何启动
 
-1. 安装lerna，`npm i lerna -g`。
+该过程在 MacOS 上测试过。若使用 windows，建议用 WSL 环境。
+
+1. 安装 lerna，`npm i lerna -g`。
 2. Bootstrap，`npx lerna bootstrap` 或`lerna bootstrap`。若遇到问题，可以参考 https://github.com/lerna/lerna
-3. 同时启动server和client。`lerna run start --parallel`。
-4. 待3执行完成后，访问 http://localhost:8080/
+3. 同时启动 server 和 client。`lerna run start --parallel`。
+4. 待 3 执行完成后，访问 http://localhost:8080/
+
+经测试，安装的时候可能会发生 Cannot find module 'fork-ts-checker-webpack-plugin-v5'。该情况需要执行，`cd packages/client && yarn install`。建议用 yarn，速度会快一些。
 
 # 开发文档
 
@@ -66,17 +68,17 @@
 
 ### 遗留业务
 
-* 总收入支出的部分表示不太明确，有优化的空间。比如，显示总收入，月收入之类的文案。
-* 账单信息的修改。当用户双击某个条目时，该条目可编辑金额和类别。
-* 账单删除。用户可针对单个账单进行删除。
-* 自定义分类。
-* 图表信息，比如饼图或直方图。
+- 总收入支出的部分表示不太明确，有优化的空间。比如，显示总收入，月收入之类的文案。
+- 账单信息的修改。当用户双击某个条目时，该条目可编辑金额和类别。
+- 账单删除。用户可针对单个账单进行删除。
+- 自定义分类。
+- 图表信息，比如饼图或直方图。
 
 ### 遗留代码问题
 
-* client和server中有些可以共享的工具函数和模型对象，可以提取公共部分。
-* server端应编写service层的单元测试。
-* server端可以编写基于fixture的e2e测试。
-* cvs文件本身不适合作为数据存储的工具，应替换为sqlite。（现在偶尔会发生文件存储的错误）
-* 金额过大时，会产生graphql int溢出的问题，应在客户端处理一下金额。
-* 现有项目未考虑部署产品环境的问题，需根据情况选择合适的部署模式。
+- client 和 server 中有些可以共享的工具函数和模型对象，可以提取公共部分。
+- server 端应编写 service 层的单元测试。
+- server 端可以编写基于 fixture 的 e2e 测试。
+- cvs 文件本身不适合作为数据存储的工具，应替换为 sqlite。（现在偶尔会发生文件存储的错误）
+- 金额过大时，会产生 graphql int 溢出的问题，应在客户端处理一下金额。
+- 现有项目未考虑部署产品环境的问题，需根据情况选择合适的部署模式。
