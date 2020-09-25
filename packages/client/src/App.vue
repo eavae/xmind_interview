@@ -5,8 +5,8 @@
     <BillNav
       v-if="data"
       :categories="data.categories"
-      :total-income="data.totalIncome"
-      :total-outcome="data.totalOutcome"
+      :total-income="data.getBills.totalIncome"
+      :total-outcome="data.getBills.totalOutcome"
       :avaliable-dates="data.avaliableDates"
       @update="queryChanged"
     />
@@ -75,35 +75,6 @@ function formatDate(time: Date) {
   return `${time.getFullYear()}-${month > 9 ? month : `0${month}`}`
 }
 
-const createBillCacheUpdater: MutationUpdaterFn<MutationBillResponse> = (
-  cache,
-  { data },
-) => {
-  const cacheData = cache.readQuery<QueryAllBillsResponse>({
-    query: QUERY_ALL_BILLS,
-  })
-  if (cacheData && data) {
-    cacheData.getBills.nodes.unshift(data.createBill)
-    cacheData.getBills.totalCount += 1
-
-    if (data.createBill.type === BillType.INCOME) {
-      cacheData.totalIncome += data.createBill.amount
-    } else {
-      cacheData.totalOutcome += data.createBill.amount
-    }
-
-    const formatedDate = formatDate(new Date(data.createBill.time))
-    if (!cacheData.avaliableDates.includes(formatedDate)) {
-      cacheData.avaliableDates.unshift(formatedDate)
-    }
-
-    cache.writeQuery({
-      query: QUERY_ALL_BILLS,
-      data: cacheData,
-    })
-  }
-}
-
 export default {
   name: 'App',
   components: {
@@ -129,7 +100,8 @@ export default {
     const { mutate: createBill } = useMutation<MutationBillResponse>(
       CREATE_BILL,
       {
-        update: createBillCacheUpdater,
+        // @ts-ignore
+        refetchQueries: refetch,
       },
     )
 

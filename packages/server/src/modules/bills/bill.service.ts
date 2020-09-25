@@ -94,6 +94,8 @@ export class BillService {
     const currentPageItems = slice(offset, offset + limit, bills)
 
     return {
+      totalIncome: this.getTotalIncome(bills),
+      totalOutcome: this.getTotalOutcome(bills),
       nodes: currentPageItems,
       totalCount,
       hasNextPage:
@@ -119,16 +121,14 @@ export class BillService {
     return bills
   }
 
-  async getTotalIncome() {
-    const bills = await this.getAll()
+  getTotalIncome(bills: Bill[]) {
     return bills
       .filter((x) => x.type === BillType.INCOME)
       .map((x) => x.amount)
       .reduce(add, 0)
   }
 
-  async getTotalOutcome() {
-    const bills = await this.getAll()
+  getTotalOutcome(bills: Bill[]) {
     return bills
       .filter((x) => x.type === BillType.OUTCOME)
       .map((x) => x.amount)

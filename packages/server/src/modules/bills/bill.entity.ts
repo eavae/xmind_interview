@@ -26,7 +26,13 @@ export class Bill {
 }
 
 @ObjectType()
-export class PagedBill extends Paginated(Bill) {}
+export class PagedBill extends Paginated(Bill) {
+  @Field(() => Int)
+  totalIncome: number
+
+  @Field(() => Int)
+  totalOutcome: number
+}
 
 @ArgsType()
 export class BillSearchQuery extends PaginationArgs {

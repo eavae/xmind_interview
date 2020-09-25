@@ -44,12 +44,12 @@ export class BillResolver {
 
   @Query(() => Int)
   async totalIncome() {
-    return this.billsService.getTotalIncome()
+    return this.billsService.getTotalIncome(await this.billsService.getAll())
   }
 
   @Query(() => Int)
   async totalOutcome() {
-    return this.billsService.getTotalOutcome()
+    return this.billsService.getTotalOutcome(await this.billsService.getAll())
   }
 
   @Query(() => [String])

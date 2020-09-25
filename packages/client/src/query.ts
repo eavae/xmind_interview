@@ -31,6 +31,8 @@ export const QUERY_ALL_BILLS = gql`
       offset: $offset
     ) {
       totalCount
+      totalIncome
+      totalOutcome
       hasNextPage
       nodes {
         id
