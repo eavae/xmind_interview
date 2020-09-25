@@ -10,7 +10,6 @@ import {
 
 import {
   Bill,
-  BillDateQuery,
   BillSearchQuery,
   PagedBill,
 } from '../../modules/bills/bill.entity'
@@ -25,22 +24,16 @@ export class BillResolver {
     private billsService: BillService,
   ) {}
 
-  @Query(() => [Bill])
-  async getBillsByDate(
-    @Args({ type: () => BillDateQuery }) args: BillDateQuery,
-  ) {
-    return this.billsService.getBillsByDate(
-      args.year,
-      args.month,
-      args.categoryId,
-    )
-  }
-
   @Query(() => PagedBill)
   async getBills(
     @Args({ type: () => BillSearchQuery }) args: BillSearchQuery,
   ): Promise<PagedBill> {
-    return this.billsService.getAll(args.offset, args.limit, args.categoryId)
+    const bills = await this.billsService.getAll(
+      args.categoryId,
+      args.year,
+      args.month,
+    )
+    return this.billsService.page(bills, args.offset, args.limit)
   }
 
   @ResolveField('category', () => Category)
@@ -57,6 +50,11 @@ export class BillResolver {
   @Query(() => Int)
   async totalOutcome() {
     return this.billsService.getTotalOutcome()
+  }
+
+  @Query(() => [String])
+  async avaliableDates() {
+    return this.billsService.getAvaliableDates()
   }
 
   @Mutation(() => Bill)

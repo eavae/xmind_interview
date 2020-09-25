@@ -29,23 +29,17 @@ export class Bill {
 export class PagedBill extends Paginated(Bill) {}
 
 @ArgsType()
-export class BillDateQuery {
-  @MinLength(1900)
-  @MaxLength(9999)
-  @Field(() => Int)
-  year: number
-
-  @MinLength(1)
-  @MaxLength(12)
-  @Field(() => Int)
-  month: number
-
-  @Field({ nullable: true })
-  categoryId?: string
-}
-
-@ArgsType()
 export class BillSearchQuery extends PaginationArgs {
   @Field({ nullable: true })
   categoryId?: string
+
+  @MinLength(1900)
+  @MaxLength(9999)
+  @Field(() => Int, { nullable: true })
+  year?: number
+
+  @MinLength(1)
+  @MaxLength(12)
+  @Field(() => Int, { nullable: true })
+  month?: number
 }

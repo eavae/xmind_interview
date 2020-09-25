@@ -4,8 +4,8 @@
 
 type Bill {
   amount: Int!
-  category: Category!
-  categoryId: String!
+  category: Category
+  categoryId: String
   id: Int!
   time: Date!
   type: BillType!
@@ -25,6 +25,10 @@ type Category {
 """Date scalar type"""
 scalar Date
 
+type Mutation {
+  createBill(amount: Int!, type: BillType!): Bill!
+}
+
 type PagedBill {
   hasNextPage: Boolean!
   nodes: [Bill!]
@@ -32,9 +36,9 @@ type PagedBill {
 }
 
 type Query {
+  avaliableDates: [String!]!
   categories: [Category!]!
-  getBills(categoryId: String, limit: Int = 20, offset: Int = 0): PagedBill!
-  getBillsByDate(categoryId: String, month: Int!, year: Int!): [Bill!]!
+  getBills(categoryId: String, limit: Int = 20, month: Int, offset: Int = 0, year: Int): PagedBill!
   totalIncome: Int!
   totalOutcome: Int!
 }

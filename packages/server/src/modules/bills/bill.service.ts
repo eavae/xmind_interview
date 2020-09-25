@@ -76,14 +76,8 @@ export class BillService {
     })
   }
 
-  async getBillsByDate(year: number, month: number, categoryId?: string) {
-    const bills = this.convertTypes((await this.db.get()) as any)
-
-    return filter((bill) => {
-      if (categoryId && categoryId !== bill.categoryId) {
-        return false
-      }
-
+  static filterByDate(year: number, month: number) {
+    return (bill: Bill) => {
       if (
         bill.time.getFullYear() !== year ||
         bill.time.getMonth() + 1 !== month
@@ -92,20 +86,13 @@ export class BillService {
       }
 
       return true
-    }, bills)
+    }
   }
 
-  async getAll(offset: number, limit: number, categoryId?: string) {
-    let bills = this.convertTypes((await this.db.get()) as any).sort(
-      (a, b) => b.time.getTime() - a.time.getTime(),
-    )
-
-    if (categoryId) {
-      bills = filter((bill) => bill.categoryId === categoryId, bills)
-    }
+  page(bills: Bill[], offset: number, limit: number) {
     const totalCount = bills.length
-
     const currentPageItems = slice(offset, offset + limit, bills)
+
     return {
       nodes: currentPageItems,
       totalCount,
@@ -115,8 +102,25 @@ export class BillService {
     }
   }
 
+  async getAll(categoryId?: string, year?: number, month?: number) {
+    let bills = this.convertTypes((await this.db.get()) as any).sort(
+      (a, b) => b.time.getTime() - a.time.getTime(),
+    )
+
+    if (categoryId) {
+      bills = filter((bill) => bill.categoryId === categoryId, bills)
+    }
+
+    if (year && month) {
+      const filterBy = BillService.filterByDate(year, month)
+      bills = filter(filterBy, bills)
+    }
+
+    return bills
+  }
+
   async getTotalIncome() {
-    const bills = this.convertTypes((await this.db.get()) as any)
+    const bills = await this.getAll()
     return bills
       .filter((x) => x.type === BillType.INCOME)
       .map((x) => x.amount)
@@ -124,10 +128,22 @@ export class BillService {
   }
 
   async getTotalOutcome() {
-    const bills = this.convertTypes((await this.db.get()) as any)
+    const bills = await this.getAll()
     return bills
       .filter((x) => x.type === BillType.OUTCOME)
       .map((x) => x.amount)
       .reduce(add, 0)
+  }
+
+  async getAvaliableDates() {
+    const bills = await this.getAll()
+    const avaliableDates = new Set<string>()
+    bills.forEach((bill) => {
+      const month = bill.time.getMonth() + 1
+      avaliableDates.add(
+        `${bill.time.getFullYear()}-${month > 9 ? month : `0${month}`}`,
+      )
+    })
+    return [...avaliableDates].reverse()
   }
 }

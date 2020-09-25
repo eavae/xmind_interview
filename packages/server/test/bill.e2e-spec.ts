@@ -16,14 +16,6 @@ query {
 }
 `
 
-const GET_BILLS_BY_DATE_QUERY = `
-query {
-  getBillsByDate(year: 2019, month: 11) {
-    id
-  }
-}
-`
-
 const TOTAL_INCOME_AND_OUTCOME_QUERY = `
 query {
   totalIncome
@@ -52,20 +44,6 @@ describe('Bill Module (e2e)', () => {
       .expect(200)
       .expect(
         '{"data":{"getBills":{"hasNextPage":true,"totalCount":6,"nodes":[{"id":17}]}}}\n',
-      )
-  })
-
-  it('GET_BILLS_BY_DATE_QUERY', () => {
-    return request(app.getHttpServer())
-      .post('/graphql')
-      .send({
-        operationName: null,
-        query: GET_BILLS_BY_DATE_QUERY,
-        variables: {},
-      })
-      .expect(200)
-      .expect(
-        '{"data":{"getBillsByDate":[{"id":17},{"id":18},{"id":19},{"id":20},{"id":21}]}}\n',
       )
   })
 
