@@ -144,6 +144,6 @@ export class BillService {
         `${bill.time.getFullYear()}-${month > 9 ? month : `0${month}`}`,
       )
     })
-    return [...avaliableDates].reverse()
+    return [...avaliableDates]
   }
 }

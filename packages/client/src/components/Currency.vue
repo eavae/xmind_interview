@@ -36,7 +36,7 @@ export default {
 
       const toFixedValue = (this.value / 100).toFixed(2)
       if (this.billType === BillType.INCOME) {
-        return `${this.value >= 0 ? '+' : '-'} ${toFixedValue}`
+        return `${this.value >= 0 ? '+' : ''}${toFixedValue}`
       }
       return toFixedValue
     },
