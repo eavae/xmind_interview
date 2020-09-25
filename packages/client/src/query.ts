@@ -16,8 +16,20 @@ export const TOTAL_INCOME_AND_OUTCOME_FRAGMENT = gql`
 `
 
 export const QUERY_ALL_BILLS = gql`
-  query getBills($categoryId: String, $limit: Int = 20, $offset: Int = 0) {
-    getBills(categoryId: $categoryId, limit: $limit, offset: $offset) {
+  query getBills(
+    $categoryId: String
+    $year: Int
+    $month: Int
+    $limit: Int = 20
+    $offset: Int = 0
+  ) {
+    getBills(
+      categoryId: $categoryId
+      year: $year
+      month: $month
+      limit: $limit
+      offset: $offset
+    ) {
       totalCount
       hasNextPage
       nodes {
@@ -34,6 +46,7 @@ export const QUERY_ALL_BILLS = gql`
       ...AllCategoryFields
     }
     ...TotalIncomeAndOutCome
+    avaliableDates
   }
   ${CATEGORIES_FRAGMENT}
   ${TOTAL_INCOME_AND_OUTCOME_FRAGMENT}

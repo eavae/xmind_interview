@@ -7,6 +7,7 @@
       :categories="data.categories"
       :total-income="data.totalIncome"
       :total-outcome="data.totalOutcome"
+      :avaliable-dates="data.avaliableDates"
       @update="queryChanged"
     />
     <Bills
@@ -54,16 +55,24 @@ interface QueryAllBillsResponse {
   categories: Category[]
   totalIncome: number
   totalOutcome: number
+  avaliableDates: string[]
 }
 
 interface QueryAllBillsVariable {
   categoryId?: string
   limit?: number
   offset?: number
+  year?: number
+  month?: number
 }
 
 interface MutationBillResponse {
   createBill: Bill
+}
+
+function formatDate(time: Date) {
+  const month = time.getMonth() + 1
+  return `${time.getFullYear()}-${month > 9 ? month : `0${month}`}`
 }
 
 const createBillCacheUpdater: MutationUpdaterFn<MutationBillResponse> = (
@@ -76,11 +85,18 @@ const createBillCacheUpdater: MutationUpdaterFn<MutationBillResponse> = (
   if (cacheData && data) {
     cacheData.getBills.nodes.unshift(data.createBill)
     cacheData.getBills.totalCount += 1
+
     if (data.createBill.type === BillType.INCOME) {
       cacheData.totalIncome += data.createBill.amount
     } else {
       cacheData.totalOutcome += data.createBill.amount
     }
+
+    const formatedDate = formatDate(new Date(data.createBill.time))
+    if (!cacheData.avaliableDates.includes(formatedDate)) {
+      cacheData.avaliableDates.unshift(formatedDate)
+    }
+
     cache.writeQuery({
       query: QUERY_ALL_BILLS,
       data: cacheData,
@@ -110,7 +126,7 @@ export default {
       {},
     )
 
-    const { mutate: createBill } = useMutation<{ createBill: Bill }>(
+    const { mutate: createBill } = useMutation<MutationBillResponse>(
       CREATE_BILL,
       {
         update: createBillCacheUpdater,
@@ -149,9 +165,11 @@ export default {
     }
   },
   methods: {
-    queryChanged({ categoryId }: { categoryId?: string }) {
+    queryChanged({ categoryId, date }: { categoryId?: string; date?: string }) {
       // @ts-ignore
       this.refetch({
+        year: date ? +date.split('-')[0] : undefined,
+        month: date ? +date.split('-')[1] : undefined,
         categoryId,
         offset: 0,
       })

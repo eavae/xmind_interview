@@ -29,8 +29,9 @@
     <div class="date">
       <select v-model="date" name="date">
         <option value="">所有日期</option>
-        <option value="2019-11">2019年11月</option>
-        <option value="2019-12">2019年12月</option>
+        <option v-for="month in avaliableDates" :key="month" :value="month">
+          {{ formatDate(month) }}
+        </option>
       </select>
     </div>
   </nav>
@@ -61,6 +62,10 @@ export default {
       type: Number,
       default: () => 0,
     },
+    avaliableDates: {
+      type: Array,
+      default: () => [],
+    },
   },
   emits: ['update'],
   data() {
@@ -76,6 +81,12 @@ export default {
         date: this.date,
       })
     },
+    date(newValue) {
+      this.$emit('update', {
+        categoryId: this.category,
+        date: newValue,
+      })
+    },
   },
   created() {
     this.MONTH_TO_NAME = MONTH_TO_NAME
@@ -85,6 +96,10 @@ export default {
   methods: {
     filteredCategory(type) {
       return this.categories.filter((x) => x.type === type)
+    },
+    formatDate(date) {
+      const [year, month] = date.split('-')
+      return `${year}年${month}月`
     },
   },
 }
